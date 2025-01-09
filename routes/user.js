@@ -11,7 +11,6 @@ const {body,validationResult} = require('express-validator')
 router.post('/adduser',[
     body('name','Enter a valid name').isLength({min:3}),
     body('password', 'Password should have atleast 6 characters').isLength({ min: 6 }),
-    body('email','Enter valid email').isEmail()
     
 ],async (req,res)=>{
     let answer = 0
@@ -22,16 +21,15 @@ router.post('/adduser',[
         return res.status(400).json({answer,success,errors:errors.array()})
     }
     try{
-    let user = await User.findOne({email:req.body.email})
+    let user = await User.findOne({name:req.body.name})
     if(user){
         answer = 2
-        return res.status(400).json({answer,success,error:"sorry user with this email exits"})
+        return res.status(400).json({answer,success,error:"sorry user with this name exits"})
     }
     const salt = bcrypt.genSaltSync(10)
     const securedPassword = bcrypt.hashSync(req.body.password, salt)
     user = await User.create({
         name:req.body.name,
-        email:req.body.email,
         password:securedPassword}
     )
     const data ={
@@ -51,27 +49,25 @@ router.post('/adduser',[
 //login
 router.post("/loginuser", [
     body('password', 'Password should have atleast 6 characters').isLength({ min: 6 }),
-    body('email', 'Enter valid email').isEmail()
 ], async (request, response) => {
     let success = false
     const errors = validationResult(request)
     if (!errors.isEmpty()) {
         return response.status(400).json({success,error: errors.array() })
     }
-    const { email, password } = request.body
+    const { name, password } = request.body
     try {
-        let user = await User.findOne({ email })
+        let user = await User.findOne({ name })
         if (!user) {
-            return response.status(400).json({success, error: "You entered wrong password or email" })
+            return response.status(400).json({success, error: "You entered wrong password or name" })
         }
         const match = await bcrypt.compare(password, user.password)
         if (!match) {
-            return response.status(400).json({success, error: "You entered wrong password or email" })
+            return response.status(400).json({success, error: "You entered wrong password or name" })
         }
         const data = {
             user: {
                 id: user.id,
-                email: user.email,
                 name: user.name
             }
         }
@@ -95,9 +91,9 @@ router.post("/modify", [
     if (!errors.isEmpty()) {
         return response.status(400).json({ success, error: errors.array() })
     }
-    const { name, email, oldPassword, newPassword } = request.body
+    const { name, oldPassword, newPassword } = request.body
     try {
-        let user = await User.findOne({ email })
+        let user = await User.findOne({ name })
         if (user) {
             if (oldPassword ==="EmptyString" && newPassword === ("EmptyString")){
                 user.name = name
@@ -112,7 +108,7 @@ router.post("/modify", [
                 user.password = securedPassword
             }
             await user.save()
-            var token = jwt.sign({ user: { id: user.id, email: user.email, name: user.name, password: user.password } }, JWT_SECRET)
+            var token = jwt.sign({ user: { id: user.id, name: user.name, password: user.password } }, JWT_SECRET)
             success = true
             response.send({ success, token })
         } else {
