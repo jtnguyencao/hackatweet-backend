@@ -32,6 +32,7 @@ const roomSchema = mongoose.Schema(
         latitude: {
             type: Number,
         },
+        additionalImages: [String],
         description: {
             type: String,
             trim: true,
