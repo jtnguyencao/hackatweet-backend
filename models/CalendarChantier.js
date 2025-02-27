@@ -25,6 +25,7 @@ const calendarChantierSchema = mongoose.Schema(
             type: Number,
             required: [true, 'calendar Chantier must have status'],
         },
+        additionalImages: [String],
         note: {
             type: String,
             trim: true,
