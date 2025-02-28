@@ -36,6 +36,36 @@ exports.fetchAllEvents = async (req, res) => {
     }
 }
 
+// GET all chantiers for a chantierId
+exports.fetchAllChantiers = async (req, res) => {
+    const chantierId = req.params.chantierId
+    if (!chantierId) {
+        return res.status(400).json({
+            status: 'fail',
+            message: 'chantierId is required'
+        })
+    }
+
+    try {
+        const query = {
+            chantierId: chantierId
+        }
+
+        const events = await CalendarChantier.find(query)
+
+        res.status(200).json({
+            events,
+            totalNumber: events.length
+        })
+    } catch (err) {
+        console.error('Error fetching chantiers:', err)
+        res.status(400).json({
+            status: 'fail',
+            message: err.message
+        })
+    }
+}
+
 // POST
 exports.createEvent = async (req, res) => {
     try {

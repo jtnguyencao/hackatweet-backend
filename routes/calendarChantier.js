@@ -12,6 +12,10 @@ router
     .get(calendarChantierController.fetchAllEvents)
 
 router
+    .route('/room/:chantierId/all')
+    .get(calendarChantierController.fetchAllChantiers)
+
+router
     .route('/:id')
     .delete(calendarChantierController.deleteEvent)
     .post(calendarChantierController.updateEvent)
