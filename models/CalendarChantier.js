@@ -14,16 +14,13 @@ const calendarChantierSchema = mongoose.Schema(
         contact: {
             type: String,
             trim: true,
-            required: [true, 'Site must have contact']
         },
         address: {
             type: String,
             trim: true,
-            required: [true, 'Site must have address']
         },
         status: {
             type: Number,
-            required: [true, 'calendar Chantier must have status'],
         },
         additionalImages: [String],
         note: {
