@@ -7,7 +7,6 @@ const calendarChantierSchema = mongoose.Schema(
         },
         name: {
             type: String,
-            unique: true,
             required: [true, 'Site must have name'],
             trim: true,
         },
