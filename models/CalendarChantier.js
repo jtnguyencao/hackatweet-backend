@@ -38,6 +38,16 @@ const calendarChantierSchema = mongoose.Schema(
             type: Date,
             default: Date.now(),
         },
+        assignees: [
+            {
+                id: { type: String },
+                name: { type: String },
+                image: { type: String, default: null },
+            }
+        ],
+        urgence: {
+            type: Number,
+        },
     }
 )
 module.exports = mongoose.model('calendarChantier', calendarChantierSchema)
