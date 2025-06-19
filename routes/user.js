@@ -21,14 +21,13 @@ router.post('/adduser',[
         return res.status(400).json({answer,success,errors:errors.array()})
     }
     try{
-    let user = await User.findOne({name:req.body.name})
-    if(user){
+    /*if(user){
         answer = 2
         return res.status(400).json({answer,success,error:"sorry user with this name exits"})
-    }
+    }*/
     const salt = bcrypt.genSaltSync(10)
     const securedPassword = bcrypt.hashSync(req.body.password, salt)
-    user = await User.create({
+    let user = await User.create({
         name:req.body.name,
         password:securedPassword}
     )
